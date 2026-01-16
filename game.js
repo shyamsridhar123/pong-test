@@ -58,55 +58,43 @@ class Paddle {
 // Create player paddle on left side
 const playerPaddle = new Paddle(20, canvas.height / 2 - 50, 10, 100);
 
-// Keyboard event listeners
-const keys = {
-    w: false,
-    s: false,
-    arrowUp: false,
-    arrowDown: false
+// Track active keys using a counter approach for each direction
+const activeKeys = {
+    up: 0,
+    down: 0
 };
 
 document.addEventListener('keydown', (e) => {
     const key = e.key.toLowerCase();
     
-    if (key === 'w') {
-        keys.w = true;
-        playerPaddle.moveUp = true;
-    } else if (key === 's') {
-        keys.s = true;
-        playerPaddle.moveDown = true;
-    } else if (e.key === 'ArrowUp') {
-        e.preventDefault(); // Prevent page scrolling
-        keys.arrowUp = true;
-        playerPaddle.moveUp = true;
-    } else if (e.key === 'ArrowDown') {
-        e.preventDefault(); // Prevent page scrolling
-        keys.arrowDown = true;
-        playerPaddle.moveDown = true;
+    if (key === 'w' || key === 'arrowup') {
+        if (key === 'arrowup') e.preventDefault(); // Prevent page scrolling
+        if (!playerPaddle.moveUp) {
+            activeKeys.up++;
+            playerPaddle.moveUp = true;
+        }
+    } else if (key === 's' || key === 'arrowdown') {
+        if (key === 'arrowdown') e.preventDefault(); // Prevent page scrolling
+        if (!playerPaddle.moveDown) {
+            activeKeys.down++;
+            playerPaddle.moveDown = true;
+        }
     }
 });
 
 document.addEventListener('keyup', (e) => {
     const key = e.key.toLowerCase();
     
-    if (key === 'w') {
-        keys.w = false;
-        if (!keys.arrowUp) {
+    if (key === 'w' || key === 'arrowup') {
+        activeKeys.up--;
+        if (activeKeys.up <= 0) {
+            activeKeys.up = 0;
             playerPaddle.moveUp = false;
         }
-    } else if (key === 's') {
-        keys.s = false;
-        if (!keys.arrowDown) {
-            playerPaddle.moveDown = false;
-        }
-    } else if (e.key === 'ArrowUp') {
-        keys.arrowUp = false;
-        if (!keys.w) {
-            playerPaddle.moveUp = false;
-        }
-    } else if (e.key === 'ArrowDown') {
-        keys.arrowDown = false;
-        if (!keys.s) {
+    } else if (key === 's' || key === 'arrowdown') {
+        activeKeys.down--;
+        if (activeKeys.down <= 0) {
+            activeKeys.down = 0;
             playerPaddle.moveDown = false;
         }
     }
