@@ -1,0 +1,22 @@
+{
+  "name": "pong-game",
+  "version": "1.0.0",
+  "description": "Classic Pong game built with HTML5 Canvas",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Info: No test framework configured yet. Manual testing required: Open index.html in browser.\" && exit 0",
+    "start": "echo \"Open index.html in your browser to play the game\""
+  },
+  "keywords": [
+    "pong",
+    "game",
+    "html5",
+    "canvas",
+    "javascript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
