@@ -3,11 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Classic Pong Game built with HTML5 Canvas">
     <title>Pong Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="gameCanvas" aria-label="Pong game canvas"></canvas>
+    <div class="game-container">
+        <h1>Pong Game</h1>
+        <div id="mode-indicator" class="mode-indicator">1P vs AI</div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="controls">
+            <p>Player 1: W (Up) / S (Down)</p>
+            <p id="player2-mode">Player 2: AI Opponent (Medium)</p>
+            <p>Press SPACE to start</p>
+            <div class="mode-buttons">
+                <button data-mode="1P" class="active" onclick="setGameMode('1P')">1P vs AI</button>
+                <button data-mode="2P" onclick="setGameMode('2P')">2P Local</button>
+            </div>
+            <div class="difficulty-buttons">
+                <button onclick="setDifficulty('easy')">Easy</button>
+                <button onclick="setDifficulty('medium')" class="active">Medium</button>
+                <button onclick="setDifficulty('hard')">Hard</button>
+                <button onclick="toggleAI()">Toggle AI</button>
+            </div>
+        </div>
+    </div>
     <script src="game.js"></script>
 </body>
 </html>
