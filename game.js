@@ -51,6 +51,50 @@ const ball = {
     speed: INITIAL_BALL_SPEED
 };
 
+// Particle system for hit effects
+const particles = [];
+
+class Particle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 8;
+        this.vy = (Math.random() - 0.5) * 8;
+        this.life = 1.0;
+        this.decay = 0.02;
+        this.size = Math.random() * 3 + 2;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+        this.vy += 0.2; // Gravity
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = '#00ffff';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00ffff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    isDead() {
+        return this.life <= 0;
+    }
+}
+
+function createParticles(x, y, count = 10) {
+    for (let i = 0; i < count; i++) {
+        particles.push(new Particle(x, y));
+    }
+}
+
 // Keyboard state
 const keys = {};
 
@@ -122,6 +166,14 @@ function update() {
         return;
     }
 
+    // Update particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        if (particles[i].isDead()) {
+            particles.splice(i, 1);
+        }
+    }
+
     // Move paddles based on keyboard input
     if (keys['w'] && paddle1.y > 0) {
         paddle1.y -= PADDLE_SPEED;
@@ -154,6 +206,8 @@ function update() {
         ball.dx = Math.abs(ball.dx);
         ball.speed *= 1.05; // Increase speed slightly
         ball.dx = ball.speed * (ball.dx / Math.abs(ball.dx));
+        // Create particle effect on hit
+        createParticles(ball.x + ball.width / 2, ball.y + ball.height / 2, 15);
     }
 
     if (
@@ -164,6 +218,8 @@ function update() {
         ball.dx = -Math.abs(ball.dx);
         ball.speed *= 1.05; // Increase speed slightly
         ball.dx = ball.speed * (ball.dx / Math.abs(ball.dx));
+        // Create particle effect on hit
+        createParticles(ball.x + ball.width / 2, ball.y + ball.height / 2, 15);
     }
 
     // Ball goes out of bounds (scoring)
@@ -194,28 +250,43 @@ function draw() {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw center line
-    ctx.strokeStyle = '#fff';
+    // Draw center line with glow
+    ctx.strokeStyle = '#00ffff';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#00ffff';
     ctx.setLineDash([10, 10]);
     ctx.beginPath();
     ctx.moveTo(canvas.width / 2, 0);
     ctx.lineTo(canvas.width / 2, canvas.height);
     ctx.stroke();
     ctx.setLineDash([]);
+    ctx.shadowBlur = 0;
 
-    // Draw paddles
+    // Draw paddles with glow effect
     ctx.fillStyle = '#fff';
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = '#00ffff';
     ctx.fillRect(paddle1.x, paddle1.y, paddle1.width, paddle1.height);
     ctx.fillRect(paddle2.x, paddle2.y, paddle2.width, paddle2.height);
 
-    // Draw ball
+    // Draw ball with stronger glow
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = '#00ffff';
     ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
+    ctx.shadowBlur = 0;
 
-    // Draw scores
+    // Draw particles
+    particles.forEach(particle => particle.draw(ctx));
+
+    // Draw scores with glow
     ctx.font = '48px Courier New';
     ctx.textAlign = 'center';
+    ctx.fillStyle = '#fff';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#00ffff';
     ctx.fillText(scores.player1, canvas.width / 4, 60);
     ctx.fillText(scores.player2, (canvas.width * 3) / 4, 60);
+    ctx.shadowBlur = 0;
 
     // Draw state-specific overlays
     if (currentState === GameState.MENU) {

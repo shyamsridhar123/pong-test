@@ -3,31 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong Game</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #000;
-            font-family: 'Courier New', monospace;
-        }
-
-        #gameCanvas {
-            border: 2px solid #fff;
-            background-color: #000;
-        }
-    </style>
+    <title>Pong Game - Classic Arcade</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="game-container">
+        <!-- Game Title -->
+        <div class="game-title">
+            <h1>PONG</h1>
+        </div>
+
+        <!-- Canvas with Wrapper for Effects -->
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div class="scanline-overlay"></div>
+        </div>
+
+        <!-- Instructions and Controls -->
+        <div class="instructions">
+            <h2>CONTROLS</h2>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <span class="control-key">W / S</span>
+                    <span class="control-desc">Player 1 Paddle</span>
+                </div>
+                <div class="control-item">
+                    <span class="control-key">↑ / ↓</span>
+                    <span class="control-desc">Player 2 Paddle</span>
+                </div>
+                <div class="control-item">
+                    <span class="control-key">SPACE</span>
+                    <span class="control-desc">Start / Restart Game</span>
+                </div>
+                <div class="control-item">
+                    <span class="control-key">P / ESC</span>
+                    <span class="control-desc">Pause / Resume</span>
+                </div>
+            </div>
+            <p class="game-info">First to 11 points wins! • Classic Pong gameplay with modern visual effects</p>
+        </div>
+    </div>
+
     <script src="game.js"></script>
 </body>
 </html>
