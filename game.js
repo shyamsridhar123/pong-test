@@ -218,7 +218,7 @@ function draw() {
     
     // Draw difficulty level during gameplay
     if (gameState === GAME_STATES.PLAYING || gameState === GAME_STATES.PAUSED) {
-        drawText(`Difficulty: ${DIFFICULTY_CONFIGS[currentDifficulty].name}`, canvas.width / 2, 30, 16);
+        drawText(`Difficulty: ${DIFFICULTY_CONFIGS[currentDifficulty].name}`, canvas.width / 2, 20, 14);
     }
 }
 
