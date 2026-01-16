@@ -51,7 +51,7 @@ const DIFFICULTY_CONFIGS = {
 
 // Current difficulty (validate before use)
 let storedDifficulty = localStorage.getItem('pongDifficulty');
-let currentDifficulty = (storedDifficulty && DIFFICULTY_CONFIGS[storedDifficulty]) ? storedDifficulty : 'medium';
+let currentDifficulty = (typeof storedDifficulty === 'string' && DIFFICULTY_CONFIGS[storedDifficulty]) ? storedDifficulty : 'medium';
 
 // Game constants
 const PADDLE_WIDTH = 10;
