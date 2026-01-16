@@ -88,8 +88,8 @@ pong-test/
 
 Potential features to add:
 
-- [ ] Single-player mode with AI opponent
-- [ ] Difficulty levels
+- [x] Single-player mode with AI opponent
+- [x] Difficulty levels
 - [ ] Sound effects and background music
 - [ ] Power-ups and special abilities
 - [ ] Mobile touch controls

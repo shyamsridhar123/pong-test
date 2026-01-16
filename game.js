@@ -271,8 +271,10 @@ function setDifficulty(level) {
     // Update button states
     document.querySelectorAll('.difficulty-buttons button').forEach(btn => {
         btn.classList.remove('active');
+        if (btn.textContent.toLowerCase() === level) {
+            btn.classList.add('active');
+        }
     });
-    event.target.classList.add('active');
 }
 
 function toggleAI() {
