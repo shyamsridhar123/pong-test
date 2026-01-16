@@ -122,8 +122,6 @@ document.addEventListener('keyup', (e) => {
 
 // Update AI paddle behavior
 function updateAI() {
-    if (!AI.enabled) return;
-    
     const settings = AI.getCurrentSettings();
     const currentTime = Date.now();
     
