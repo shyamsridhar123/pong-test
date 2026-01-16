@@ -58,43 +58,59 @@ class Paddle {
 // Create player paddle on left side
 const playerPaddle = new Paddle(20, canvas.height / 2 - 50, 10, 100);
 
-// Track active keys using a counter approach for each direction
-const activeKeys = {
-    up: 0,
-    down: 0
+// Track which keys are currently pressed
+const keysPressed = {
+    w: false,
+    arrowup: false,
+    s: false,
+    arrowdown: false
 };
 
 document.addEventListener('keydown', (e) => {
     const key = e.key.toLowerCase();
     
-    if (key === 'w' || key === 'arrowup') {
-        if (key === 'arrowup') e.preventDefault(); // Prevent page scrolling
-        if (!playerPaddle.moveUp) {
-            activeKeys.up++;
-            playerPaddle.moveUp = true;
-        }
-    } else if (key === 's' || key === 'arrowdown') {
-        if (key === 'arrowdown') e.preventDefault(); // Prevent page scrolling
-        if (!playerPaddle.moveDown) {
-            activeKeys.down++;
-            playerPaddle.moveDown = true;
-        }
+    if (key === 'w') {
+        keysPressed.w = true;
+        playerPaddle.moveUp = true;
+    } else if (key === 'arrowup') {
+        e.preventDefault(); // Prevent page scrolling
+        keysPressed.arrowup = true;
+        playerPaddle.moveUp = true;
+    } else if (key === 's') {
+        keysPressed.s = true;
+        playerPaddle.moveDown = true;
+    } else if (key === 'arrowdown') {
+        e.preventDefault(); // Prevent page scrolling
+        keysPressed.arrowdown = true;
+        playerPaddle.moveDown = true;
     }
 });
 
 document.addEventListener('keyup', (e) => {
     const key = e.key.toLowerCase();
     
-    if (key === 'w' || key === 'arrowup') {
-        activeKeys.up--;
-        if (activeKeys.up <= 0) {
-            activeKeys.up = 0;
+    if (key === 'w') {
+        keysPressed.w = false;
+        // Only stop moving up if arrow up is also not pressed
+        if (!keysPressed.arrowup) {
             playerPaddle.moveUp = false;
         }
-    } else if (key === 's' || key === 'arrowdown') {
-        activeKeys.down--;
-        if (activeKeys.down <= 0) {
-            activeKeys.down = 0;
+    } else if (key === 'arrowup') {
+        keysPressed.arrowup = false;
+        // Only stop moving up if w is also not pressed
+        if (!keysPressed.w) {
+            playerPaddle.moveUp = false;
+        }
+    } else if (key === 's') {
+        keysPressed.s = false;
+        // Only stop moving down if arrow down is also not pressed
+        if (!keysPressed.arrowdown) {
+            playerPaddle.moveDown = false;
+        }
+    } else if (key === 'arrowdown') {
+        keysPressed.arrowdown = false;
+        // Only stop moving down if s is also not pressed
+        if (!keysPressed.s) {
             playerPaddle.moveDown = false;
         }
     }
