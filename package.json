@@ -1,0 +1,13 @@
+{
+  "name": "pong-game",
+  "version": "1.0.0",
+  "description": "Classic HTML5 Pong Game",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"No tests configured yet\" && exit 0",
+    "start": "echo \"Open index.html in a browser to play\""
+  },
+  "keywords": ["pong", "game", "html5", "canvas"],
+  "author": "",
+  "license": "MIT"
+}
