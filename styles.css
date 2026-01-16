@@ -5,15 +5,38 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Color palette */
+    --cyan-glow: #00ffff;
+    --cyan-dark: #00aaff;
+    --bg-dark: #000000;
+    --bg-mid: #1a1a2e;
+    --bg-light: #16213e;
+    --text-white: #fff;
+    --text-gray: #aaa;
+    --text-dark-gray: #888;
+    
+    /* Spacing */
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    
+    /* Glow effects */
+    --glow-sm: 10px;
+    --glow-md: 20px;
+    --glow-lg: 40px;
+    --glow-xl: 60px;
+}
+
 body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-mid) 50%, var(--bg-light) 100%);
     font-family: 'Courier New', monospace;
-    color: #fff;
+    color: var(--text-white);
     overflow: hidden;
 }
 
@@ -22,14 +45,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
 }
 
 /* Title styles */
 .game-title {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: var(--spacing-sm);
 }
 
 .game-title h1 {
@@ -37,29 +60,29 @@ body {
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 8px;
-    color: #fff;
+    color: var(--text-white);
     text-shadow: 
-        0 0 10px #00ffff,
-        0 0 20px #00ffff,
-        0 0 30px #00ffff,
-        0 0 40px #00aaff;
+        0 0 var(--glow-sm) var(--cyan-glow),
+        0 0 var(--glow-md) var(--cyan-glow),
+        0 0 30px var(--cyan-glow),
+        0 0 var(--glow-lg) var(--cyan-dark);
     animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
     0%, 100% {
         text-shadow: 
-            0 0 10px #00ffff,
-            0 0 20px #00ffff,
-            0 0 30px #00ffff,
-            0 0 40px #00aaff;
+            0 0 var(--glow-sm) var(--cyan-glow),
+            0 0 var(--glow-md) var(--cyan-glow),
+            0 0 30px var(--cyan-glow),
+            0 0 var(--glow-lg) var(--cyan-dark);
     }
     50% {
         text-shadow: 
-            0 0 20px #00ffff,
-            0 0 30px #00ffff,
-            0 0 40px #00ffff,
-            0 0 50px #00aaff;
+            0 0 var(--glow-md) var(--cyan-glow),
+            0 0 30px var(--cyan-glow),
+            0 0 var(--glow-lg) var(--cyan-glow),
+            0 0 50px var(--cyan-dark);
     }
 }
 
@@ -70,12 +93,12 @@ body {
 }
 
 #gameCanvas {
-    border: 2px solid #00ffff;
-    background-color: #000;
+    border: 2px solid var(--cyan-glow);
+    background-color: var(--bg-dark);
     box-shadow: 
-        0 0 20px rgba(0, 255, 255, 0.5),
-        0 0 40px rgba(0, 255, 255, 0.3),
-        0 0 60px rgba(0, 170, 255, 0.2);
+        0 0 var(--glow-md) rgba(0, 255, 255, 0.5),
+        0 0 var(--glow-lg) rgba(0, 255, 255, 0.3),
+        0 0 var(--glow-xl) rgba(0, 170, 255, 0.2);
     filter: contrast(1.1) brightness(1.1);
     position: relative;
     z-index: 1;
@@ -113,21 +136,21 @@ body {
 .instructions {
     text-align: center;
     max-width: 800px;
-    margin-top: 10px;
+    margin-top: var(--spacing-sm);
 }
 
 .instructions h2 {
     font-size: 20px;
-    margin-bottom: 15px;
-    color: #00ffff;
-    text-shadow: 0 0 10px #00ffff;
+    margin-bottom: var(--spacing-md);
+    color: var(--cyan-glow);
+    text-shadow: 0 0 var(--glow-sm) var(--cyan-glow);
 }
 
 .controls-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .control-item {
@@ -142,12 +165,12 @@ body {
     background: rgba(0, 255, 255, 0.2);
     border-color: rgba(0, 255, 255, 0.6);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+    box-shadow: 0 4px var(--spacing-md) rgba(0, 255, 255, 0.3);
 }
 
 .control-key {
     font-weight: bold;
-    color: #00ffff;
+    color: var(--cyan-glow);
     font-size: 16px;
     display: block;
     margin-bottom: 5px;
@@ -155,12 +178,12 @@ body {
 
 .control-desc {
     font-size: 14px;
-    color: #aaa;
+    color: var(--text-gray);
 }
 
 .game-info {
     font-size: 14px;
-    color: #888;
+    color: var(--text-dark-gray);
     font-style: italic;
 }
 
@@ -168,16 +191,16 @@ body {
 @keyframes scoreChange {
     0% {
         transform: scale(1);
-        color: #fff;
+        color: var(--text-white);
     }
     50% {
         transform: scale(1.3);
-        color: #00ffff;
-        text-shadow: 0 0 20px #00ffff;
+        color: var(--cyan-glow);
+        text-shadow: 0 0 var(--glow-md) var(--cyan-glow);
     }
     100% {
         transform: scale(1);
-        color: #fff;
+        color: var(--text-white);
     }
 }
 
