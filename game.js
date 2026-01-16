@@ -44,6 +44,41 @@ const paddleHeight = 100;
 const player1 = new Paddle(10, canvas.height / 2 - paddleHeight / 2, paddleWidth, paddleHeight);
 const player2 = new Paddle(canvas.width - 20, canvas.height / 2 - paddleHeight / 2, paddleWidth, paddleHeight);
 
+// AI configuration
+const AI = {
+    enabled: true,
+    difficulty: 'medium', // easy, medium, hard
+    reactionDelay: 0,
+    lastReactionTime: 0,
+    targetY: canvas.height / 2,
+    
+    // Difficulty settings
+    difficulties: {
+        easy: {
+            speed: 3,
+            reactionTime: 300, // ms
+            accuracy: 0.6,
+            predictionError: 40
+        },
+        medium: {
+            speed: 4.5,
+            reactionTime: 150, // ms
+            accuracy: 0.8,
+            predictionError: 20
+        },
+        hard: {
+            speed: 5.5,
+            reactionTime: 50, // ms
+            accuracy: 0.95,
+            predictionError: 5
+        }
+    },
+    
+    getCurrentSettings() {
+        return this.difficulties[this.difficulty];
+    }
+};
+
 // Score tracking
 const score = {
     player1: 0,
@@ -67,6 +102,48 @@ document.addEventListener('keyup', (e) => {
     keys[e.key] = false;
 });
 
+// Update AI paddle behavior
+function updateAI() {
+    if (!AI.enabled) return;
+    
+    const settings = AI.getCurrentSettings();
+    const currentTime = Date.now();
+    
+    // Only react when ball is moving toward AI (right side)
+    if (ball.speedX > 0) {
+        // Check if enough time has passed since last reaction (reaction delay)
+        if (currentTime - AI.lastReactionTime > settings.reactionTime) {
+            AI.lastReactionTime = currentTime;
+            
+            // Calculate target position with some prediction error
+            const predictionError = (Math.random() - 0.5) * settings.predictionError;
+            AI.targetY = ball.y + predictionError;
+            
+            // Add accuracy factor - sometimes the AI "misses" the target
+            if (Math.random() > settings.accuracy) {
+                AI.targetY += (Math.random() - 0.5) * paddleHeight;
+            }
+        }
+    } else {
+        // When ball is not coming toward AI, move to center gradually
+        AI.targetY = canvas.height / 2;
+    }
+    
+    // Move paddle toward target position with limited speed
+    const paddleCenter = player2.y + player2.height / 2;
+    const distanceToTarget = AI.targetY - paddleCenter;
+    
+    if (Math.abs(distanceToTarget) > 5) {
+        if (distanceToTarget > 0) {
+            player2.dy = settings.speed;
+        } else {
+            player2.dy = -settings.speed;
+        }
+    } else {
+        player2.dy = 0;
+    }
+}
+
 // Update paddle positions based on keyboard input
 function updatePaddles() {
     // Player 1 controls (W/S)
@@ -78,13 +155,18 @@ function updatePaddles() {
         player1.dy = 0;
     }
     
-    // Player 2 controls (Arrow keys)
-    if (keys['ArrowUp']) {
-        player2.dy = -player2.speed;
-    } else if (keys['ArrowDown']) {
-        player2.dy = player2.speed;
+    // Player 2 controls (Arrow keys) - only if AI is disabled
+    if (!AI.enabled) {
+        if (keys['ArrowUp']) {
+            player2.dy = -player2.speed;
+        } else if (keys['ArrowDown']) {
+            player2.dy = player2.speed;
+        } else {
+            player2.dy = 0;
+        }
     } else {
-        player2.dy = 0;
+        // Update AI paddle
+        updateAI();
     }
     
     // Update positions
@@ -180,3 +262,30 @@ function gameLoop() {
 
 // Initial draw
 draw();
+
+// UI control functions
+function setDifficulty(level) {
+    AI.difficulty = level;
+    updateUI();
+    
+    // Update button states
+    document.querySelectorAll('.difficulty-buttons button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+
+function toggleAI() {
+    AI.enabled = !AI.enabled;
+    updateUI();
+}
+
+function updateUI() {
+    const modeText = document.getElementById('player2-mode');
+    if (AI.enabled) {
+        const difficulty = AI.difficulty.charAt(0).toUpperCase() + AI.difficulty.slice(1);
+        modeText.textContent = `Player 2: AI Opponent (${difficulty})`;
+    } else {
+        modeText.textContent = 'Player 2: ↑ (Up) / ↓ (Down)';
+    }
+}
