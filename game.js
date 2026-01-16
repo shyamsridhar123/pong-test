@@ -273,7 +273,6 @@ function pauseGame() {
 
 // Resume game
 function resumeGame() {
-    gameState = GAME_STATES.PAUSED;
     pauseScreen.classList.add('hidden');
     gameState = GAME_STATES.PLAYING;
 }
