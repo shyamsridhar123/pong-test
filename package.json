@@ -1,0 +1,17 @@
+{
+  "name": "pong-game",
+  "version": "1.0.0",
+  "description": "Classic Pong game with game state management",
+  "main": "game.js",
+  "scripts": {
+    "test": "jest",
+    "start": "npx http-server -p 8080"
+  },
+  "keywords": ["pong", "game", "canvas"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}
