@@ -18,22 +18,52 @@ const GAME_STATES = {
 
 let gameState = GAME_STATES.START;
 
+// Difficulty configurations
+const DIFFICULTY_CONFIGS = {
+    easy: {
+        name: 'Easy',
+        paddleHeight: 100,
+        playerSpeed: 6,
+        aiSpeed: 2.5,
+        aiReactionDelay: 50,
+        initialBallSpeed: 4,
+        ballSpeedIncrement: 0.2
+    },
+    medium: {
+        name: 'Medium',
+        paddleHeight: 100,
+        playerSpeed: 6,
+        aiSpeed: 4,
+        aiReactionDelay: 35,
+        initialBallSpeed: 5,
+        ballSpeedIncrement: 0.3
+    },
+    hard: {
+        name: 'Hard',
+        paddleHeight: 80,
+        playerSpeed: 6,
+        aiSpeed: 5.5,
+        aiReactionDelay: 20,
+        initialBallSpeed: 6,
+        ballSpeedIncrement: 0.4
+    }
+};
+
+// Current difficulty (validate before use)
+let storedDifficulty = localStorage.getItem('pongDifficulty');
+let currentDifficulty = (typeof storedDifficulty === 'string' && DIFFICULTY_CONFIGS[storedDifficulty]) ? storedDifficulty : 'medium';
+
 // Game constants
 const PADDLE_WIDTH = 10;
-const PADDLE_HEIGHT = 100;
 const BALL_SIZE = 10;
 const WINNING_SCORE = 11;
-const PADDLE_SPEED = 6;
-const INITIAL_BALL_SPEED = 5;
-const BALL_SPEED_INCREMENT = 0.3;
-const AI_SPEED = 4;
 
 // Player paddle
 const player = {
     x: 20,
-    y: canvas.height / 2 - PADDLE_HEIGHT / 2,
+    y: canvas.height / 2 - DIFFICULTY_CONFIGS[currentDifficulty].paddleHeight / 2,
     width: PADDLE_WIDTH,
-    height: PADDLE_HEIGHT,
+    height: DIFFICULTY_CONFIGS[currentDifficulty].paddleHeight,
     dy: 0,
     score: 0
 };
@@ -41,9 +71,9 @@ const player = {
 // AI paddle
 const ai = {
     x: canvas.width - 20 - PADDLE_WIDTH,
-    y: canvas.height / 2 - PADDLE_HEIGHT / 2,
+    y: canvas.height / 2 - DIFFICULTY_CONFIGS[currentDifficulty].paddleHeight / 2,
     width: PADDLE_WIDTH,
-    height: PADDLE_HEIGHT,
+    height: DIFFICULTY_CONFIGS[currentDifficulty].paddleHeight,
     dy: 0,
     score: 0
 };
@@ -54,17 +84,66 @@ const ball = {
     y: canvas.height / 2,
     width: BALL_SIZE,
     height: BALL_SIZE,
-    dx: INITIAL_BALL_SPEED,
-    dy: INITIAL_BALL_SPEED,
-    speed: INITIAL_BALL_SPEED
+    dx: DIFFICULTY_CONFIGS[currentDifficulty].initialBallSpeed,
+    dy: DIFFICULTY_CONFIGS[currentDifficulty].initialBallSpeed,
+    speed: DIFFICULTY_CONFIGS[currentDifficulty].initialBallSpeed
 };
 
 // Keyboard state
 const keys = {};
 
+// Initialize difficulty buttons
+function initializeDifficultyButtons() {
+    const buttons = document.querySelectorAll('.difficulty-btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const difficulty = btn.dataset.difficulty;
+            setDifficulty(difficulty);
+        });
+        
+        // Highlight selected difficulty
+        if (btn.dataset.difficulty === currentDifficulty) {
+            btn.classList.add('selected');
+        }
+    });
+}
+
+// Set difficulty
+function setDifficulty(difficulty) {
+    currentDifficulty = difficulty;
+    localStorage.setItem('pongDifficulty', difficulty);
+    
+    // Update button selection
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.dataset.difficulty === difficulty) {
+            btn.classList.add('selected');
+        }
+    });
+    
+    // Update game parameters
+    const config = DIFFICULTY_CONFIGS[difficulty];
+    player.height = config.paddleHeight;
+    ai.height = config.paddleHeight;
+}
+
+// Initialize on load
+initializeDifficultyButtons();
+
 // Event listeners
 document.addEventListener('keydown', (e) => {
     keys[e.key.toLowerCase()] = true;
+    
+    // Difficulty selection with number keys
+    if (gameState === GAME_STATES.START) {
+        if (e.key === '1') {
+            setDifficulty('easy');
+        } else if (e.key === '2') {
+            setDifficulty('medium');
+        } else if (e.key === '3') {
+            setDifficulty('hard');
+        }
+    }
     
     // Start or restart game
     if (e.key === ' ' && (gameState === GAME_STATES.START || gameState === GAME_STATES.GAME_OVER)) {
@@ -137,14 +216,20 @@ function draw() {
     // Draw scores
     drawText(player.score.toString(), canvas.width / 4, 60, 48);
     drawText(ai.score.toString(), (canvas.width * 3) / 4, 60, 48);
+    
+    // Draw difficulty level during gameplay
+    if (gameState === GAME_STATES.PLAYING || gameState === GAME_STATES.PAUSED) {
+        drawText(`Difficulty: ${DIFFICULTY_CONFIGS[currentDifficulty].name}`, canvas.width / 2, 20, 14);
+    }
 }
 
 // Update player paddle
 function updatePlayer() {
+    const config = DIFFICULTY_CONFIGS[currentDifficulty];
     if ((keys['w'] || keys['arrowup']) && player.y > 0) {
-        player.dy = -PADDLE_SPEED;
+        player.dy = -config.playerSpeed;
     } else if ((keys['s'] || keys['arrowdown']) && player.y + player.height < canvas.height) {
-        player.dy = PADDLE_SPEED;
+        player.dy = config.playerSpeed;
     } else {
         player.dy = 0;
     }
@@ -158,14 +243,15 @@ function updatePlayer() {
 
 // Update AI paddle
 function updateAI() {
+    const config = DIFFICULTY_CONFIGS[currentDifficulty];
     const paddleCenter = ai.y + ai.height / 2;
     const ballCenter = ball.y + ball.height / 2;
     
-    // AI follows ball with some delay for difficulty
-    if (paddleCenter < ballCenter - 35) {
-        ai.dy = AI_SPEED;
-    } else if (paddleCenter > ballCenter + 35) {
-        ai.dy = -AI_SPEED;
+    // AI follows ball with difficulty-based delay
+    if (paddleCenter < ballCenter - config.aiReactionDelay) {
+        ai.dy = config.aiSpeed;
+    } else if (paddleCenter > ballCenter + config.aiReactionDelay) {
+        ai.dy = -config.aiSpeed;
     } else {
         ai.dy = 0;
     }
@@ -187,6 +273,7 @@ function checkPaddleCollision(paddle) {
 
 // Update ball
 function updateBall() {
+    const config = DIFFICULTY_CONFIGS[currentDifficulty];
     ball.x += ball.dx;
     ball.y += ball.dy;
     
@@ -197,7 +284,7 @@ function updateBall() {
     
     // Paddle collision
     if (checkPaddleCollision(player)) {
-        ball.dx = Math.abs(ball.dx) + BALL_SPEED_INCREMENT;
+        ball.dx = Math.abs(ball.dx) + config.ballSpeedIncrement;
         ball.x = player.x + player.width;
         
         // Add spin based on where ball hits paddle
@@ -206,7 +293,7 @@ function updateBall() {
     }
     
     if (checkPaddleCollision(ai)) {
-        ball.dx = -(Math.abs(ball.dx) + BALL_SPEED_INCREMENT);
+        ball.dx = -(Math.abs(ball.dx) + config.ballSpeedIncrement);
         ball.x = ai.x - ball.width;
         
         // Add spin based on where ball hits paddle
@@ -228,10 +315,11 @@ function updateBall() {
 
 // Reset ball to center
 function resetBall(towardsPlayer) {
+    const config = DIFFICULTY_CONFIGS[currentDifficulty];
     ball.x = canvas.width / 2 - ball.width / 2;
     ball.y = canvas.height / 2 - ball.height / 2;
-    ball.speed = INITIAL_BALL_SPEED;
-    ball.dx = towardsPlayer ? -INITIAL_BALL_SPEED : INITIAL_BALL_SPEED;
+    ball.speed = config.initialBallSpeed;
+    ball.dx = towardsPlayer ? -config.initialBallSpeed : config.initialBallSpeed;
     ball.dy = (Math.random() - 0.5) * 8;
 }
 
@@ -253,6 +341,7 @@ function endGame(message) {
 
 // Start game
 function startGame() {
+    const config = DIFFICULTY_CONFIGS[currentDifficulty];
     gameState = GAME_STATES.PLAYING;
     startScreen.classList.add('hidden');
     gameOverScreen.classList.add('hidden');
@@ -260,6 +349,12 @@ function startGame() {
     // Reset scores
     player.score = 0;
     ai.score = 0;
+    
+    // Reset paddle heights based on difficulty
+    player.height = config.paddleHeight;
+    ai.height = config.paddleHeight;
+    player.y = canvas.height / 2 - player.height / 2;
+    ai.y = canvas.height / 2 - ai.height / 2;
     
     // Reset ball
     resetBall(Math.random() > 0.5);
