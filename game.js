@@ -48,7 +48,6 @@ const player2 = new Paddle(canvas.width - 20, canvas.height / 2 - paddleHeight /
 const AI = {
     enabled: true,
     difficulty: 'medium', // easy, medium, hard
-    reactionDelay: 0,
     lastReactionTime: 0,
     targetY: canvas.height / 2,
     
