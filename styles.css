@@ -73,6 +73,62 @@ h1 {
     margin: 8px 0;
 }
 
+/* Difficulty selector */
+.difficulty-selector {
+    margin: 30px 0;
+}
+
+.difficulty-selector h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px #fff;
+    letter-spacing: 4px;
+}
+
+.difficulty-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.difficulty-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    padding: 15px 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 2px solid #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.difficulty-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.difficulty-btn.selected {
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+}
+
+/* Difficulty display */
+.difficulty-display {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    text-shadow: 0 0 3px #fff;
+    z-index: 5;
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 850px) {
     #pongCanvas {
