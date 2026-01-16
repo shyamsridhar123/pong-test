@@ -49,7 +49,6 @@ const player2 = new Paddle(canvas.width - 20, canvas.height / 2 - paddleHeight /
 
 // AI configuration
 const AI = {
-    enabled: true,
     difficulty: 'medium', // easy, medium, hard
     lastReactionTime: 0,
     targetY: canvas.height / 2,
@@ -339,11 +338,6 @@ function setDifficulty(level) {
             btn.classList.add('active');
         }
     });
-}
-
-function toggleAI() {
-    AI.enabled = !AI.enabled;
-    updateUI();
 }
 
 function updateUI() {
