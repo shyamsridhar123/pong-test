@@ -1,0 +1,26 @@
+{
+  "name": "pong-test",
+  "version": "1.0.0",
+  "description": "Pong game with collision detection system",
+  "main": "game.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node -e \"console.log('Open index.html in a browser to play the game')\""
+  },
+  "keywords": [
+    "pong",
+    "game",
+    "collision-detection"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/*.test.js"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game - Collision Detection</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a1a;
+            font-family: Arial, sans-serif;
+        }
+        #gameCanvas {
+            border: 2px solid #fff;
+            background-color: #000;
+        }
+        .info {
+            position: absolute;
+            top: 20px;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h2>Pong - Collision Detection Demo</h2>
+        <p>Use W/S keys for left paddle, Arrow Up/Down for right paddle</p>
+    </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script src="ball.js"></script>
+    <script src="paddle.js"></script>
+    <script src="collision.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
