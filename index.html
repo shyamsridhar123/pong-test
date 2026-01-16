@@ -160,6 +160,9 @@
         const INITIAL_BALL_SPEED = 5;
         const MAX_BALL_SPEED = 12;
         const SPEED_INCREMENT = 0.3;
+        const AI_DIFFICULTY_FACTOR = 0.7;
+        const AI_DEAD_ZONE = 35;
+        const ANGLE_VARIATION_FACTOR = 0.8;
 
         // Game state
         let gameRunning = false;
@@ -260,11 +263,11 @@
             const ballCenter = ball.y;
             
             // AI reaction speed (lower = harder)
-            const aiSpeed = PADDLE_SPEED * 0.7;
+            const aiSpeed = PADDLE_SPEED * AI_DIFFICULTY_FACTOR;
             
-            if (aiCenter < ballCenter - 35) {
+            if (aiCenter < ballCenter - AI_DEAD_ZONE) {
                 ai.y += aiSpeed;
-            } else if (aiCenter > ballCenter + 35) {
+            } else if (aiCenter > ballCenter + AI_DEAD_ZONE) {
                 ai.y -= aiSpeed;
             }
             
@@ -290,7 +293,7 @@
                 
                 // Calculate hit position for angle variation
                 const hitPos = (ball.y - (player.y + player.height / 2)) / (player.height / 2);
-                ball.dy = hitPos * ball.speed * 0.8;
+                ball.dy = hitPos * ball.speed * ANGLE_VARIATION_FACTOR;
                 ball.dx = Math.abs(ball.dx);
                 
                 // Increase ball speed
@@ -306,7 +309,7 @@
                 
                 // Calculate hit position for angle variation
                 const hitPos = (ball.y - (ai.y + ai.height / 2)) / (ai.height / 2);
-                ball.dy = hitPos * ball.speed * 0.8;
+                ball.dy = hitPos * ball.speed * ANGLE_VARIATION_FACTOR;
                 ball.dx = -Math.abs(ball.dx);
                 
                 // Increase ball speed
