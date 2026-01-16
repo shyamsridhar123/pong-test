@@ -18,10 +18,12 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+// Set up static rendering properties for center line
+ctx.strokeStyle = '#fff';
+ctx.lineWidth = 2;
+
 // Draw center line divider
 function drawCenterLine() {
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
     ctx.setLineDash([10, 10]);
     ctx.beginPath();
     ctx.moveTo(canvas.width / 2, 0);
